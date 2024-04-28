@@ -10,6 +10,9 @@ include vendor/exthmui-tspi/configs/version.mk
 # Sounds
 include vendor/exthmui-tspi/configs/sounds.mk
 
+# Static overlay
+include vendor/exthmui-tspi/overlay/overlay.mk
+
 # Include {Lato,Rubik} fonts
 $(call inherit-product-if-exists, external/google-fonts/lato/fonts.mk)
 $(call inherit-product-if-exists, external/google-fonts/rubik/fonts.mk)
