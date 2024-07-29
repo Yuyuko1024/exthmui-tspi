@@ -30,6 +30,7 @@ fi
 # 定义变量用于存储 ID 和 VERSION_ID
 ID=""
 VERSION_ID=""
+VERSION_MAJOR=""
 
 # 使用 awk 读取 /etc/os-release 文件并提取 ID 和 VERSION_ID
 while IFS='=' read -r key value
@@ -59,6 +60,7 @@ fi
 if [[ "$VERSION_ID" =~ ^([0-9]+)\.([0-9]+) ]]; then
     major=${BASH_REMATCH[1]}
     minor=${BASH_REMATCH[2]}
+    VERSION_MAJOR=${BASH_REMATCH[1]}
     if (( major * 100 + minor < 2004 )); then
         echo "当前版本低于 20.04, 退出..."
         exit 1
@@ -84,7 +86,12 @@ function step1()
     echo "step1.安装依赖并设置"
     sudo apt update
     sudo apt -y install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev lib32ncurses5-dev libncurses5 libncurses5-dev
-    sudo apt -y install python3.10
+    if [ $VERSION_MAJOR == 20 ];then
+        sudo apt -y install python3.9
+    fi
+    if [ $VERSION_MAJOR == 22 ];then
+        sudo apt -y install python3.10
+    fi
 }
 
 # 更新repo版本
@@ -92,8 +99,14 @@ function step2()
 {
     echo "------------------"
     echo "step2.更新repo版本"
-    sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
-    sudo update-alternatives --set python /usr/bin/python3.10
+    if [ $VERSION_MAJOR == 20 ];then
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+        sudo update-alternatives --set python /usr/bin/python3.9
+    fi
+    if [ $VERSION_MAJOR == 22 ];then
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+        sudo update-alternatives --set python /usr/bin/python3.10
+    fi
     cd $SRC_ROOT/.repo/repo
     git remote add tuna https://mirrors.tuna.tsinghua.edu.cn/git/git-repo
     git fetch tuna main
