@@ -88,6 +88,8 @@ function step1()
     sudo apt -y install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick lib32readline-dev lib32z1-dev libelf-dev liblz4-tool libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev lib32ncurses5-dev libncurses5 libncurses5-dev
     # 部分系统可能会在上述步骤缺失部分软件，这里重新走一次官方的依赖安装
     sudo apt install -y git python make openjdk-8-jdk git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev libgl1-mesa-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libxml2-utils xsltproc unzip python bc imagemagick ccache schedtool libssl-dev libncursesw5-dev libncurses5 libncursesw5 libncurses5-dev libncurses-dev libncurses-gst libncurses5-dev clang
+    # 部分系统可能需要Python 2.7
+    sudo apt install python2.7
     if [ $VERSION_MAJOR == 20 ];then
         sudo apt -y install python3.9
     fi
