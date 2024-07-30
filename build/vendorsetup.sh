@@ -14,7 +14,11 @@ UBOOT_TARGET="rk3566"
 
 # kernel config
 KERNEL_DIR=$SRC_TOP/kernel
-KERNEL_CFG="tspi_defconfig rk356x_evb.config android-11.config"
+if [ $SHELL = "/usr/bin/zsh" ];then
+    KERNEL_CFG=(tspi_defconfig rk356x_evb.config android-11.config)
+else
+    KERNEL_CFG="tspi_defconfig rk356x_evb.config android-11.config"
+fi
 KERNEL_ARCH="arm64"
 KERNEL_DTS="tspi-rk3566-user-v10"
 
@@ -123,7 +127,11 @@ function build_kernel()
                 make clean
                 ;;
             "clang")
-                ADDON_ARGS="CC=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/clang LD=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/ld.lld"
+                if [ $SHELL = "/usr/bin/zsh" ];then
+                    ADDON_ARGS=(CC=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/clang LD=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/ld.lld)
+                else
+                    ADDON_ARGS="CC=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/clang LD=../prebuilts/clang/host/linux-x86/clang-r383902b/bin/ld.lld"
+                fi
                 ;;
             *)
                 echo "警告：未识别的参数 '$arg' 将被忽略。"
