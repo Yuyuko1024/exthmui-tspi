@@ -100,7 +100,6 @@ function build_uboot()
     else
         echo "U-Boot构建出错!"
         cd $SRC_TOP
-        exit 1
     fi
 }
 
