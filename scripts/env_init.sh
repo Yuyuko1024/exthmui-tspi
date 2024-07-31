@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #------------------
-# 环境初始化脚本 v1.0
+# 环境初始化脚本 v1.1
 # 请在刚解压完 tspi_android_sdk_repo_20240202.tar.gz 后执行本脚本
 # 这将帮你一键初始化完所需的代码和环境
 # 后续你可以不需要使用本脚本
@@ -10,12 +10,12 @@
 clear
 
 echo "------------------"
-echo "环境初始化脚本 v1.0"
+echo "环境初始化脚本 v1.1"
 echo "请在刚解压完 tspi_android_sdk_repo_20240202.tar.gz 后在源代码根目录执行本脚本"
 echo "这将帮你一键初始化完所需的代码和环境"
 echo "后续你可以不需要使用本脚本"
 echo "------------------"
-echo "本脚本推荐你使用Ubuntu 20.04和22.04的Linux发行版。"
+echo "本脚本推荐你使用立创推荐的Ubuntu 18.04版本的Linux发行版。当然20.04或者22.04也是可以的。"
 echo "你可以修改脚本来跳过一些你不需要的操作"
 
 # repo路径，默认源码自带
@@ -52,7 +52,7 @@ done < /etc/os-release
 
 # 检查 ID 是否为 debian 或 ubuntu
 if [[ "$ID" != "ubuntu" ]]; then
-    echo "当前系统不是Debian或者Ubuntu,退出..."
+    echo "当前系统不是Ubuntu,退出..."
     exit 1
 fi
 
@@ -61,8 +61,8 @@ if [[ "$VERSION_ID" =~ ^([0-9]+)\.([0-9]+) ]]; then
     major=${BASH_REMATCH[1]}
     minor=${BASH_REMATCH[2]}
     VERSION_MAJOR=${BASH_REMATCH[1]}
-    if (( major * 100 + minor < 2004 )); then
-        echo "当前版本低于 20.04, 退出..."
+    if (( major * 100 + minor < 1804 )); then
+        echo "当前版本低于 18.04, 退出..."
         exit 1
     fi
     if (( major * 100 + minor > 2204 )); then
@@ -90,6 +90,9 @@ function step1()
     sudo apt install -y git make openjdk-8-jdk git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev libgl1-mesa-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libxml2-utils xsltproc unzip bc imagemagick ccache schedtool libssl-dev libncursesw5-dev libncurses5 libncursesw5 libncurses5-dev libncurses-dev libncurses-gst libncurses5-dev clang
     # 部分系统可能需要Python 2.7
     sudo apt install python2.7
+    if [ $VERSION_MAJOR == 18 ];then
+        sudo apt -y install python python3.8
+    fi
     if [ $VERSION_MAJOR == 20 ];then
         sudo apt -y install python3.9
     fi
@@ -103,6 +106,10 @@ function step2()
 {
     echo "------------------"
     echo "step2.更新repo版本"
+    if [ $VERSION_MAJOR == 18 ];then
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+        sudo update-alternatives --set python /usr/bin/python3.8
+    fi
     if [ $VERSION_MAJOR == 20 ];then
         sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
         sudo update-alternatives --set python /usr/bin/python3.9
@@ -125,7 +132,6 @@ function step3()
     $REPO_BIN sync -l -j88
     cd $SRC_ROOT/kernel
     git clean -xdf
-    rm -rf config test
     cd $SRC_ROOT
     $REPO_BIN forall -c "git checkout lckfb-tspi-v1.0.0"
 }
