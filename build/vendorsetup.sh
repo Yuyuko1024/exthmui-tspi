@@ -57,6 +57,10 @@ function vendor_usage()
     echo "    参数： 1- [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。"
     echo "          1- [arg1] [arg2] allclean: 等效于 make clean, 编译前全清理步骤。"
     echo "          [arg1] [arg2] clang: 编译时使用 SDK 自带 clang"
+    echo
+    echo "make_rkimg: 打包rockchip镜像和parameter"
+    echo
+    echo "make_update_img: 打包 update.img 刷机固件（需要先lunch指定的config）"
     echo "----------------------------------"
 }
 
