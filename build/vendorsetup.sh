@@ -27,6 +27,33 @@ ANDROID_PRODUCT="rk3566_tspi"
 ANDROID_VARIANT="userdebug"
 
 
+# --------------------
+# 脚本私有方法
+function cmd_msg()
+{
+    local ncolors=$(tput colors 2>/dev/null)
+    if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
+        color_failed=$'\E'"[0;31m"
+        color_success=$'\E'"[0;32m"
+        color_reset=$'\E'"[00m"
+    else
+        color_failed=""
+        color_success=""
+        color_reset=""
+    fi
+    local caller_function=${FUNCNAME[1]}
+    if [ $1 = 0 ];then
+        echo
+        echo -n "${color_success}#### ok: 步骤 $caller_function 完成！"
+        echo
+    else
+        echo
+        echo -n "${color_failed}#### error: 步骤 $caller_function 出错！"
+        echo
+    fi
+    echo "${color_reset}"
+}
+
 function vendor_usage()
 {
     echo "----------------------------------"
@@ -104,11 +131,12 @@ function build_uboot()
     ./make.sh $UBOOT_TARGET
     if [ $? -eq 0 ]; then
         echo "U-Boot构建完成!"
-        cd $SRC_TOP
+        cmd_msg 0
     else
         echo "U-Boot构建出错!"
-        cd $SRC_TOP
+        cmd_msg 1
     fi
+    cd $SRC_TOP
 }
 
 function build_kernel()
@@ -144,7 +172,9 @@ function build_kernel()
     done
 
     make $ADDON_ARGS ARCH=$KERNEL_ARCH $KERNEL_CFG 
+    cmd_msg $?
     make $ADDON_ARGS ARCH=$KERNEL_ARCH $KERNEL_DTS.img -j$BUILD_JOBS
+    cmd_msg $?
     cd $SRC_TOP
 
 }
@@ -169,6 +199,7 @@ function build_android()
     esac
 
     make -j$BUILD_JOBS
+    cmd_msg $?
 }
 
 function make_rkimg()
@@ -176,8 +207,10 @@ function make_rkimg()
     local AB_IMG=$(get_build_var BOARD_USES_AB_IMAGE)
     if [ $AB_IMG = "true" ];then
         bash $SRC_TOP/mkimage_ab.sh
+        cmd_msg $?
     else
         bash $SRC_TOP/mkimage.sh
+        cmd_msg $?
     fi
 }
 
@@ -185,6 +218,7 @@ function make_update_img()
 {
     cd $SRC_TOP
     ./build.sh -u
+    cmd_msg $?
 }
 
 function build_all()
