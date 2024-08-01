@@ -177,6 +177,12 @@ function make_rkimg()
     fi
 }
 
+function make_update_img()
+{
+    cd $SRC_TOP
+    ./build.sh -u
+}
+
 function build_all()
 {
     cd $SRC_TOP
@@ -218,5 +224,6 @@ function build_all()
     build_android $ANDROID_BUILD_ARG
 
     make_rkimg
+    make_update_img
 }
 
