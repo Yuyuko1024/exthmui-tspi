@@ -5,4 +5,4 @@
 #
 
 # Inherit common exTHmUI stuff
-$(call inherit-product, vendor/exthmui/config/tablet-wifi.mk)
+$(call inherit-product, vendor/exthmui-tspi/configs/tablet-wifi.mk)

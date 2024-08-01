@@ -5,4 +5,4 @@
 #
 
 # Inherit common exTHmUI stuff
-$(call inherit-product, vendor/exthmui/config/common.mk)
+$(call inherit-product, vendor/exthmui-tspi/configs/common.mk)

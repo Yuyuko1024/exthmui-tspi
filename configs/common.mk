@@ -5,10 +5,10 @@
 #
 
 # exTHmUI version
--include vendor/exthmui/config/version.mk
+-include vendor/exthmui-tspi/configs/version.mk
 
 # Sounds
-include vendor/exthmui/config/sounds.mk
+include vendor/exthmui-tspi/configs/sounds.mk
 
 # Include {Lato,Rubik} fonts
 $(call inherit-product-if-exists, external/google-fonts/lato/fonts.mk)
