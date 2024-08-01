@@ -1,0 +1,10 @@
+android_app_import{
+    name:"ViaBrowser",
+    apk:"ViaBrowser.apk",
+    presigned: true,
+    dex_preopt:{
+        enabled: false,
+    },
+    system_ext_specific: true,
+    overrides:["Browser2", "Lightning"],
+}
