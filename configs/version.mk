@@ -16,9 +16,3 @@ ifeq ($(IS_RELEASE), true)
 endif
 
 EXTHM_VERSION := exTHmUI-$(EXTHM_NUM_VERSION)-$(EXTHM_BRANCH)-$(EXTHM_DEVICE)-$(EXTHM_BUILD_TYPE)-$(EXTHM_DATE)
-
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.exthm.version=$(EXTHM_VERSION) \
-    ro.exthm.branch=$(EXTHM_BRANCH) \
-    ro.exthm.build.version=$(EXTHM_NUM_VERSION) \
-    ro.exthm.build.type=$(EXTHM_BUILD_TYPE)

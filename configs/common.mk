@@ -5,7 +5,7 @@
 #
 
 # exTHmUI version
--include vendor/exthmui-tspi/configs/version.mk
+include vendor/exthmui-tspi/configs/version.mk
 
 # Sounds
 include vendor/exthmui-tspi/configs/sounds.mk
