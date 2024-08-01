@@ -167,6 +167,16 @@ function build_android()
     make -j$BUILD_JOBS
 }
 
+function make_rkimg()
+{
+    local AB_IMG=$(get_build_var BOARD_USES_AB_IMAGE)
+    if [ $AB_IMG = "true" ];then
+        bash $SRC_TOP/mkimage_ab.sh
+    else
+        bash $SRC_TOP/mkimage.sh
+    fi
+}
+
 function build_all()
 {
     cd $SRC_TOP
@@ -207,5 +217,6 @@ function build_all()
     build_kernel $KERNEL_CLEAN_ARG $KERNEL_BUILD_CLANG_FLAG
     build_android $ANDROID_BUILD_ARG
 
+    make_rkimg
 }
 
