@@ -60,4 +60,5 @@ build_all [arg1] [arg2]: 编译上面所有三个步骤的构建输出
 对于泰山派小海豚手机项目，您需要事先从 [千古长夜丶/TSPiPhoneEXT - Gitee.com](https://gitee.com/faltering_and_small_white/tspi-phone-ext/tree/master) 获取 kernel 补丁并修补 kernel。
 自动更新补丁和修补脚本将会在未来推出。
 
+对于补丁更新，您可以在本仓库路径下执行 `git submodule update --remote patchs` 来更新补丁仓库。
 
