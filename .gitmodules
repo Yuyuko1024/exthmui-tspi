@@ -1,0 +1,3 @@
+[submodule "patchs"]
+	path = patchs
+	url = https://github.com/Yuyuko1024/exthmui-tspi-patchs.git
