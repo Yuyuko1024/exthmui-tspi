@@ -55,5 +55,9 @@ build_all [arg1] [arg2]: 编译上面所有三个步骤的构建输出
 更多命令后续更新...
 
 ### 代码补丁
-后续更新...
+您在上述 clone 操作后，应该可以在本项目下看到一个 patchs 目录。这里面存放了需要对 SDK 进行修补的补丁。
+其中的 `rk356x-已修改仓库列表.md` 中已标注需要修补的仓库路径。您需要进入指定的路径，并使用 ` git am /path/to/patchs/*.patch ` 来修补代码。
+对于泰山派小海豚手机项目，您需要事先从 [千古长夜丶/TSPiPhoneEXT - Gitee.com](https://gitee.com/faltering_and_small_white/tspi-phone-ext/tree/master) 获取 kernel 补丁并修补 kernel。
+自动更新补丁和修补脚本将会在未来推出。
+
 
