@@ -54,6 +54,8 @@ function cmd_msg()
     echo "${color_reset}"
 }
 
+# --------------------
+# 脚本公用方法
 function vendor_usage()
 {
     echo "----------------------------------"
@@ -93,15 +95,20 @@ function vendor_usage()
 
 function go_top()
 {
-    cd $SRC_TOP
+    [ -d "$SRC_TOP" ] || { echo "无法找到 SRC_TOP 目录。"; }
+    cd "$SRC_TOP"
 }
 
 function cout()
 {
-    if [  "$OUT" ]; then
-        cd $OUT
-    else
+    if [ -z "$OUT" ]; then
         echo "无法定位 out 目录，请尝试构建或设定 OUT 路径."
+        return 1
+    elif [ ! -d "$OUT" ]; then
+        echo "OUT 目录不存在。"
+        return 1
+    else
+        cd "$OUT"
     fi
 }
 
