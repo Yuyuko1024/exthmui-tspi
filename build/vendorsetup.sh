@@ -75,7 +75,9 @@ function vendor_usage()
     echo "          allclean: 同时运行上述三个参数"
     echo
     echo "build_kernel [arg1] [arg2]: 编译 SDK 中的 kernel 镜像"
-    echo "    参数： [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。"
+    echo "    参数： 1- [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。"
+    echo "          1- [arg1] [arg2] mrproper: 等效于 make mrproper"
+    echo "          1- [arg1] [arg2] allclean: 同时运行上述三个参数"
     echo "          [arg1] [arg2] clang: 编译时使用 SDK 自带 clang"
     echo
     echo "build_android [arg]: 编译 SDK 中的 Android 操作系统"
@@ -90,6 +92,10 @@ function vendor_usage()
     echo "make_rkimg: 打包rockchip镜像和parameter"
     echo
     echo "make_update_img: 打包 update.img 刷机固件（需要先lunch指定的config）"
+    echo
+    echo "clean_build [arg1] [arg2]: 清理目标构建输出"
+    echo "    参数： 1- [arg1] 要清理的目标，有 uboot, kernel, android"
+    echo "          2- [arg2] 要清理的等级，清理等级参照上面命令参数"
     echo "----------------------------------"
 }
 
@@ -116,24 +122,11 @@ function build_uboot()
 {
     cd $UBOOT_DIR
 
-    # Check for specific cleaning commands and execute them
-    case "$1" in
-        "clean")
-            make clean
-            ;;
-        "mrproper")
-            make mrproper
-            ;;
-        "distclean")
-            make distclean
-            ;;
-        "allclean")
-            make clean && make mrproper && make distclean
-            ;;
-        *)
-            # No argument or unrecognized argument, proceed directly to building
-            ;;
-    esac
+    # 直接使用 $1 作为 clean_build 的第二个参数
+    if [ "$1" != "" ]; then
+        clean_build "uboot" "$1"
+        cd $UBOOT_DIR
+    fi
 
     ./make.sh $UBOOT_TARGET
     if [ $? -eq 0 ]; then
@@ -162,8 +155,9 @@ function build_kernel()
     # Process arguments
     for arg in "$@"; do
         case "$arg" in
-            "clean")
-                make clean
+            "clean"|"mrproper"|"allclean")
+                clean_build "kernel" "$arg"
+                cd $KERNEL_DIR
                 ;;
             "clang")
                 if [ $SHELL = "/usr/bin/zsh" ];then
@@ -194,11 +188,8 @@ function build_android()
 
     # Check for specific cleaning commands and execute them
     case "$1" in
-        "insclean")
-            make installclean
-            ;;
-        "allclean")
-            make clean
+        "insclean"|"allclean")
+            clean_build "android" "$1"
             ;;
         *)
             # No argument or unrecognized argument, proceed directly to building
@@ -270,5 +261,104 @@ function build_all()
 
     make_rkimg
     make_update_img
+}
+
+function clean_build() {
+    local target=$1
+    local clean_level=$2
+
+    # 检查是否提供了正确的参数数量
+    if [ -z "$target" ] || [ -z "$clean_level" ]; then
+        echo "错误：必须提供两个参数：构建目标和清理级别。"
+        return 1
+    fi
+
+    # 检查目标是否有效
+    case "$target" in
+        "uboot")
+            ;;
+        "kernel")
+            ;;
+        "android")
+            ;;
+        *)
+            echo "未知的目标: $target"
+            return 1
+            ;;
+    esac
+
+    # 检查清理级别是否有效
+    case "$clean_level" in
+        "clean" | "mrproper" | "distclean" | "allclean")
+            ;;
+        "insclean" | "allclean")
+            ;;
+        *)
+            echo "未知的清理级别: $clean_level"
+            return 1
+            ;;
+    esac
+
+    case "$target" in
+        "uboot")
+            cd $UBOOT_DIR
+            case "$clean_level" in
+                "clean")
+                    make clean
+                    ;;
+                "mrproper")
+                    make mrproper
+                    ;;
+                "distclean")
+                    make distclean
+                    ;;
+                "allclean")
+                    make clean && make mrproper && make distclean
+                    ;;
+                *)
+                    echo "未知的清理级别: $clean_level"
+                    ;;
+            esac
+            ;;
+        "kernel")
+            cd $KERNEL_DIR
+            case "$clean_level" in
+                "clean")
+                    make clean
+                    ;;
+                "mrproper")
+                    make mrproper
+                    ;;
+                "allclean")
+                    make clean && make mrproper
+                    ;;
+                *)
+                    echo "未知的清理级别: $clean_level"
+                    ;;
+            esac
+            ;;
+        "android")
+            cd $SRC_TOP
+            . build/envsetup.sh
+            lunch $ANDROID_PRODUCT-$ANDROID_VARIANT
+            case "$clean_level" in
+                "insclean")
+                    make installclean
+                    ;;
+                "allclean")
+                    make clean
+                    ;;
+                *)
+                    echo "未知的清理级别: $clean_level"
+                    ;;
+            esac
+            ;;
+        *)
+            echo "未知的目标: $target"
+            ;;
+    esac
+    cmd_msg $?
+
+    cd $SRC_TOP
 }
 
