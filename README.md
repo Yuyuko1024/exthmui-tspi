@@ -38,7 +38,9 @@ build_uboot [arg]: 编译 SDK 中的 u-boot 镜像
           allclean: 同时运行上述三个参数
 
 build_kernel [arg1] [arg2]: 编译 SDK 中的 kernel 镜像
-    参数： [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。
+    参数： 1- [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。
+          1- [arg1] [arg2] mrproper: 等效于 make mrproper
+          1- [arg1] [arg2] allclean: 同时运行上述三个参数
           [arg1] [arg2] clang: 编译时使用 SDK 自带 clang
 
 build_android [arg]: 编译 SDK 中的 Android 操作系统
@@ -49,6 +51,14 @@ build_all [arg1] [arg2]: 编译上面所有三个步骤的构建输出
     参数： 1- [arg1] [arg2] clean: 等效于 make clean, 编译前步骤。
           1- [arg1] [arg2] allclean: 等效于 make clean, 编译前全清理步骤。
           [arg1] [arg2] clang: 编译时使用 SDK 自带 clang
+
+make_rkimg: 打包rockchip镜像和parameter
+
+make_update_img: 打包 update.img 刷机固件（需要先lunch指定的config）
+
+clean_build [arg1] [arg2]: 清理目标构建输出
+    参数： 1- [arg1] 要清理的目标，有 uboot, kernel, android
+          2- [arg2] 要清理的等级，清理等级参照上面命令参数
 ----------------------------------
 ```
 
