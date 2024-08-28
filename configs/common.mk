@@ -17,6 +17,10 @@ include vendor/exthmui-tspi/overlay/overlay.mk
 $(call inherit-product-if-exists, external/google-fonts/lato/fonts.mk)
 $(call inherit-product-if-exists, external/google-fonts/rubik/fonts.mk)
 
+# Required packages
+PRODUCT_PACKAGES += \
+    ThemePicker
+
 # Media
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     media.recorder.show_manufacturer_and_model=true
